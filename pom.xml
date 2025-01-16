@@ -1,17 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+        http://maven.apache.org/POM/4.0.0
+        http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- MODEL VERSION -->
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- BASIC INFO -->
     <groupId>com.booknest</groupId>
     <artifactId>BookNest</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <!-- For a web application, specify 'war' packaging -->
+    <packaging>war</packaging>
 
+    <!-- PROPERTIES -->
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <!-- DEPENDENCIES -->
+    <dependencies>
+        <!-- Servlet API (provided by Tomcat at runtime) -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- MongoDB Java Driver (sync) -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-sync</artifactId>
+            <version>4.10.2</version>
+        </dependency>
+
+        <!-- Remove or comment out this block:
+<dependency>
+  <groupId>javax.jsp</groupId>
+  <artifactId>jsp-api</artifactId>
+  <version>2.3.3</version>
+  <scope>provided</scope>
+</dependency>
+-->
+
+        <!-- JSTL for JSP Tag Libraries (optional but often used) -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <!-- (Optional) Logging, Testing, etc. -->
+        <!-- <dependency> ... </dependency> -->
+
+    </dependencies>
+
+    <!-- BUILD CONFIG -->
+    <build>
+        <finalName>BookNest</finalName>
+        <plugins>
+            <!-- Ensures a WAR file is generated -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <!-- Optionally set 'failOnMissingWebXml' to false if you rely solely on annotations -->
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
