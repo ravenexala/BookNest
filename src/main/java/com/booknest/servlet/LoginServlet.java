@@ -26,11 +26,23 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         User user = userDAO.authenticate(username, password);
+
         if (user != null) {
             // Valid user
             HttpSession session = request.getSession();
             session.setAttribute("loggedUser", user);
-            response.sendRedirect("books");  // or homepage
+
+            if ("admin".equalsIgnoreCase(user.getRole())) {
+                // Redirect to admin dashboard
+                response.sendRedirect("adminDashboard"); // Replace with your admin page endpoint
+            } else if ("user".equalsIgnoreCase(user.getRole())) {
+                // Redirect to user homepage
+                response.sendRedirect("userHomepage"); // Replace with your user page endpoint
+            } else {
+                // Role is undefined
+                request.setAttribute("errorMessage", "Invalid role for this user.");
+                request.getRequestDispatcher("pages/login.jsp").forward(request, response);
+            }
         } else {
             // Invalid credentials
             request.setAttribute("errorMessage", "Invalid username or password.");

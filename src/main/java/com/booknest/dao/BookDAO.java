@@ -8,6 +8,7 @@ import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Updates.*;
 
@@ -24,6 +25,7 @@ public class BookDAO {
             book.setId(doc.getObjectId("_id").toHexString());
             book.setTitle(doc.getString("title"));
             book.setAuthor(doc.getString("author"));
+            book.setCategory(doc.getString("category"));
             book.setPrice(doc.getDouble("price"));
             book.setStock(doc.getInteger("stock"));
             books.add(book);
@@ -47,6 +49,7 @@ public class BookDAO {
             book.setId(doc.getObjectId("_id").toHexString());
             book.setTitle(doc.getString("title"));
             book.setAuthor(doc.getString("author"));
+            book.setCategory(doc.getString("category"));
             book.setPrice(doc.getDouble("price"));
             book.setStock(doc.getInteger("stock"));
             books.add(book);
@@ -66,6 +69,7 @@ public class BookDAO {
             book.setId(doc.getObjectId("_id").toHexString());
             book.setTitle(doc.getString("title"));
             book.setAuthor(doc.getString("author"));
+            book.setCategory(doc.getString("category"));
             book.setPrice(doc.getDouble("price"));
             book.setStock(doc.getInteger("stock"));
             return book;
@@ -73,10 +77,67 @@ public class BookDAO {
         return null;
     }
 
-    // Update book stock (for checkout)
+    // Add a new book
+    public String createBook(Book book) {
+        try {
+            MongoDatabase db = DBConnection.getDatabase();
+            MongoCollection<Document> booksCollection = db.getCollection("books");
+
+            Document bookDoc = new Document("title", book.getTitle())
+                    .append("author", book.getAuthor())
+                    .append("category", book.getCategory())
+                    .append("price", book.getPrice())
+                    .append("stock", book.getStock());
+
+            booksCollection.insertOne(bookDoc);
+            return bookDoc.getObjectId("_id").toHexString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Delete a book by ID
+    public boolean deleteBook(String bookId) {
+        try {
+            MongoDatabase db = DBConnection.getDatabase();
+            MongoCollection<Document> booksCollection = db.getCollection("books");
+
+            booksCollection.deleteOne(eq("_id", new ObjectId(bookId)));
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Update book stock (for checkout or admin updates)
     public void updateStock(String bookId, int newStock) {
         MongoDatabase db = DBConnection.getDatabase();
         MongoCollection<Document> booksCollection = db.getCollection("books");
         booksCollection.updateOne(eq("_id", new ObjectId(bookId)), set("stock", newStock));
+    }
+
+    // Update book details
+    public boolean updateBook(String bookId, Book updatedBook) {
+        try {
+            MongoDatabase db = DBConnection.getDatabase();
+            MongoCollection<Document> booksCollection = db.getCollection("books");
+
+            Document updatedFields = new Document("title", updatedBook.getTitle())
+                    .append("author", updatedBook.getAuthor())
+                    .append("category", updatedBook.getCategory())
+                    .append("price", updatedBook.getPrice())
+                    .append("stock", updatedBook.getStock());
+
+            booksCollection.updateOne(eq("_id", new ObjectId(bookId)), new Document("$set", updatedFields));
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

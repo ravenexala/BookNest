@@ -29,7 +29,8 @@ public class UserDAO {
 
             Document doc = new Document("username", user.getUsername())
                     .append("password", user.getPassword())
-                    .append("email", user.getEmail());
+                    .append("email", user.getEmail())
+                    .append("role", "user"); // Default role is 'user'
 
             usersCollection.insertOne(doc);
 
@@ -63,6 +64,7 @@ public class UserDAO {
                 user.setUsername(found.getString("username"));
                 user.setPassword(found.getString("password"));
                 user.setEmail(found.getString("email"));
+                user.setRole(found.getString("role")); // Fetch the user's role
                 return user;
             }
 
