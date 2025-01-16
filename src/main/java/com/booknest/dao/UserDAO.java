@@ -6,9 +6,14 @@ import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static com.mongodb.client.model.Filters.*;
 
 public class UserDAO {
+
+    private static final Logger LOGGER = Logger.getLogger(UserDAO.class.getName());
 
     // Register new user
     public boolean registerUser(User user) {
@@ -33,8 +38,10 @@ public class UserDAO {
             user.setId(id.toHexString());
 
             return true;
+
         } catch (Exception e) {
-            e.printStackTrace();
+            // Log the exception instead of printing stack trace
+            LOGGER.log(Level.SEVERE, "Error registering user: " + user.getUsername(), e);
             return false;
         }
     }
@@ -60,7 +67,8 @@ public class UserDAO {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            // Log the exception
+            LOGGER.log(Level.SEVERE, "Error during authentication for username=" + username, e);
         }
         return null;
     }
