@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- IntelliJ IDEA might display schema warnings, but this file is valid -->
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
@@ -7,10 +8,9 @@
 
     <display-name>BookNest</display-name>
 
-    <!-- Set index.jsp as the default welcome page -->
+    <!-- Welcome file list -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
-    <!-- Servlets are defined via @WebServlet annotations -->
 </web-app>
