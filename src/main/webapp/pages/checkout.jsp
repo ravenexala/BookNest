@@ -62,8 +62,8 @@
                         <input type="text" id="address" name="address" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label for="payment">Payment Info:</label>
-                        <input type="text" id="payment" name="payment" class="form-control" required>
+                        <label for="paymentInfo">Payment Info:</label>
+                        <input type="text" id="paymentInfo" name="paymentInfo" class="form-control" required>
                     </div>
                     <button type="submit" class="btn btn-success btn-block" style="background-color: #28a745;">Complete Purchase</button>
                 </form>
