@@ -28,6 +28,7 @@ public class BookDAO {
             book.setCategory(doc.getString("category"));
             book.setPrice(doc.getDouble("price"));
             book.setStock(doc.getInteger("stock"));
+            book.setImage(doc.getString("image")); // Set the image path from the database
             books.add(book);
         }
 
@@ -52,6 +53,7 @@ public class BookDAO {
             book.setCategory(doc.getString("category"));
             book.setPrice(doc.getDouble("price"));
             book.setStock(doc.getInteger("stock"));
+            book.setImage(doc.getString("image")); // Set the image path from the database
             books.add(book);
         }
 
@@ -72,6 +74,7 @@ public class BookDAO {
             book.setCategory(doc.getString("category"));
             book.setPrice(doc.getDouble("price"));
             book.setStock(doc.getInteger("stock"));
+            book.setImage(doc.getString("image")); // Set the image path from the database
             return book;
         }
         return null;
@@ -87,7 +90,8 @@ public class BookDAO {
                     .append("author", book.getAuthor())
                     .append("category", book.getCategory())
                     .append("price", book.getPrice())
-                    .append("stock", book.getStock());
+                    .append("stock", book.getStock())
+                    .append("image", book.getImage()); // Store the image path in the database
 
             booksCollection.insertOne(bookDoc);
             return bookDoc.getObjectId("_id").toHexString();
@@ -135,7 +139,8 @@ public class BookDAO {
                     .append("author", updatedBook.getAuthor())
                     .append("category", updatedBook.getCategory())
                     .append("price", updatedBook.getPrice())
-                    .append("stock", updatedBook.getStock());
+                    .append("stock", updatedBook.getStock())
+                    .append("image", updatedBook.getImage()); // Update the image path in the database
 
             booksCollection.updateOne(eq("_id", new ObjectId(bookId)), new Document("$set", updatedFields));
             return true;

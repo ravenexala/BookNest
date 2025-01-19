@@ -7,18 +7,20 @@ public class Book {
     private String category; // Field for category
     private double price;
     private int stock;
+    private String image;   // New field to store the image path or URL
 
     // Default constructor
     public Book() {}
 
     // Parameterized constructor for creating a new Book object
-    public Book(String id, String title, String author, String category, double price, int stock) {
+    public Book(String id, String title, String author, String category, double price, int stock, String image) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.category = category;
         this.price = price;
         this.stock = stock;
+        this.image = image;  // Initialize the image field
     }
 
     // Getters and Setters
@@ -62,6 +64,13 @@ public class Book {
     }
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public String getImage() {
+        return image;
+    }
+    public void setImage(String image) {
+        this.image = image; // Setter for image field
     }
 
     // You can add additional methods for validation, conversion, etc., if necessary

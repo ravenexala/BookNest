@@ -6,7 +6,12 @@ import com.booknest.model.Book;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 
 @WebServlet("/books/update")
 public class UpdateBookServlet extends HttpServlet {
@@ -43,8 +48,27 @@ public class UpdateBookServlet extends HttpServlet {
             return;
         }
 
-        // Create an updated book object
-        Book updatedBook = new Book(bookId, title, author, category, price, stock);
+        // Handle image file upload
+        String imageFileName = null;
+        Part filePart = request.getPart("image"); // Get image file part from the request
+        if (filePart != null && filePart.getSize() > 0) {
+            // Generate unique file name to avoid name collisions
+            String fileExtension = filePart.getSubmittedFileName().substring(filePart.getSubmittedFileName().lastIndexOf("."));
+            imageFileName = UUID.randomUUID().toString() + fileExtension;
+
+            // Define where to store the image
+            String uploadDir = getServletContext().getRealPath("/") + "images" + File.separator; // Path to save images
+            File uploadDirFile = new File(uploadDir);
+            if (!uploadDirFile.exists()) {
+                uploadDirFile.mkdir();  // Create directory if it doesn't exist
+            }
+
+            // Save the file to the server
+            filePart.write(uploadDir + imageFileName);
+        }
+
+        // Create an updated book object with the image (if available)
+        Book updatedBook = new Book(bookId, title, author, category, price, stock, imageFileName);
 
         // Update the book in the database
         boolean success = bookDAO.updateBook(bookId, updatedBook);

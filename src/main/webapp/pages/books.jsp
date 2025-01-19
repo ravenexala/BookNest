@@ -7,6 +7,15 @@
     <title>Available Books</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="/BookNest/assests/styles.css" rel="stylesheet">
+    <style>
+        /* Add custom styles for the images */
+        .book-image {
+            width: 100%;       /* Ensures the image takes the full width of the card */
+            height: auto;      /* Maintains the aspect ratio */
+            max-height: 200px; /* Limits the maximum height of the image */
+            object-fit: contain; /* Ensures the image is fully contained and not cropped */
+        }
+    </style>
 </head>
 <body>
     <%@ include file="header.jsp" %>
@@ -24,7 +33,8 @@
             <c:forEach var="book" items="${books}">
                 <div class="col-md-4 mb-4">
                     <div class="card">
-                        <img class="card-img-top" src="https://via.placeholder.com/150" alt="Book image">
+                        <!-- Display the image dynamically and apply the custom class -->
+                        <img class="card-img-top book-image" src="${book.image}" alt="${book.title} image">
                         <div class="card-body">
                             <h5 class="card-title">${book.title}</h5>
                             <p class="card-text">Author: ${book.author}</p>

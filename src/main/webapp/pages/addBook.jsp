@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Book - BookNest</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> <!-- Include updated styles -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="/BookNest/assests/styles.css" rel="stylesheet">
 </head>
 <body>
@@ -20,7 +20,7 @@
 
         <!-- Role check: If the user is not an admin, they will be redirected -->
         <c:if test="${not empty sessionScope.loggedUser && sessionScope.loggedUser.role eq 'admin'}">
-            <form action="addBook" method="POST">
+            <form action="addBook" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="title">Book Title</label>
                     <input type="text" name="title" id="title" class="form-control" required />
@@ -40,6 +40,10 @@
                 <div class="form-group">
                     <label for="category">Category</label>
                     <input type="text" name="category" id="category" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="image">Book Image</label>
+                    <input type="file" name="image" id="image" class="form-control" accept="image/*" required />
                 </div>
                 <button type="submit" class="btn btn-primary">Add Book</button>
             </form>
