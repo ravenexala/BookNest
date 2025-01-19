@@ -10,7 +10,7 @@ public class User {
     // Default constructor
     public User() {}
 
-    // Parameterized constructor
+    // Parameterized constructor to initialize a user object
     public User(String id, String username, String password, String email, String role) {
         this.id = id;
         this.username = username;
@@ -20,18 +20,50 @@ public class User {
     }
 
     // Getters and Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public String getId() {
+        return id;
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public String getUsername() {
+        return username;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    // The getRole() method will be used for checking if the logged-in user is an admin
+    public String getRole() {
+        return role;
+    }
+
+    // Set the user's role (admin, user, etc.)
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    // Optional: You can add a method to check if the user is an admin
+    public boolean isAdmin() {
+        return "admin".equalsIgnoreCase(this.role);
+    }
 }

@@ -7,8 +7,7 @@ import com.mongodb.client.MongoDatabase;
 public class DBConnection {
 
     // Example: from MongoDB Atlas
-    private static final String URI =
-            "mongodb+srv://exalasmurfing2:XcMbGGB8v7XdwvpA@cluster0.8jsum.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+    private static final String URI = "mongodb://localhost:27017";
     private static final String DATABASE_NAME = "booknest_db";
 
     private static MongoClient mongoClient = null;

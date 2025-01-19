@@ -35,8 +35,19 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
+        // Fetch shipping address and payment info from the form
+        String address = request.getParameter("address");
+        String paymentInfo = request.getParameter("paymentInfo");
+
+        // Ensure that address and payment info are provided
+        if (address == null || paymentInfo == null || address.isEmpty() || paymentInfo.isEmpty()) {
+            request.setAttribute("errorMessage", "Address and payment information are required.");
+            request.getRequestDispatcher("pages/checkout.jsp").forward(request, response);
+            return;
+        }
+
         // Create order in DB
-        String orderId = orderDAO.createOrder(loggedUser.getId(), cart);
+        String orderId = orderDAO.createOrder(loggedUser.getId(), cart, address, paymentInfo);
 
         // Update stock
         if (orderId != null) {
@@ -49,7 +60,7 @@ public class CheckoutServlet extends HttpServlet {
             response.sendRedirect("orderHistory");
         } else {
             request.setAttribute("errorMessage", "Failed to create order. Please try again.");
-            request.getRequestDispatcher("pages/cart.jsp").forward(request, response);
+            request.getRequestDispatcher("pages/checkout.jsp").forward(request, response);
         }
     }
 }

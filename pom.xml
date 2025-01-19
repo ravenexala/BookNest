@@ -48,6 +48,12 @@
   <scope>provided</scope>
 </dependency>
 -->
+        <!-- Gson for JSON processing -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.8</version>
+        </dependency>
 
         <!-- JSTL for JSP Tag Libraries (optional but often used) -->
         <dependency>

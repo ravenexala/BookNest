@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- IntelliJ IDEA might display schema warnings, but this file is valid -->
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
@@ -10,7 +8,12 @@
 
     <!-- Welcome file list -->
     <welcome-file-list>
-        <welcome-file>pages/index.jsp</welcome-file>
+        <welcome-file>pages/index.jsp</welcome-file>  <!-- Keep index.jsp inside pages folder -->
     </welcome-file-list>
+
+    <!-- Session timeout configuration -->
+    <session-config>
+        <session-timeout>30</session-timeout>  <!-- Set session timeout to 30 minutes -->
+    </session-config>
 
 </web-app>

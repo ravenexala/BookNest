@@ -2,6 +2,7 @@ package com.booknest.servlet;
 
 import com.booknest.dao.BookDAO;
 import com.booknest.model.Book;
+import com.booknest.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,19 +15,24 @@ public class AddBookServlet extends HttpServlet {
     private final BookDAO bookDAO = new BookDAO();
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher("/pages/addBook.jsp").forward(request, response);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Check if the logged-in user is an admin
         HttpSession session = request.getSession();
-        String role = (String) session.getAttribute("role");
-        if (!"admin".equalsIgnoreCase(role)) {
+        User loggedUser = (User) session.getAttribute("loggedUser");
+
+        if (loggedUser == null || !"admin".equalsIgnoreCase(loggedUser.getRole())) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Only admins can add books.");
             return;
         }
 
-        // Retrieve book details from the request
         String title = request.getParameter("title");
         String author = request.getParameter("author");
         String category = request.getParameter("category");
@@ -42,15 +48,13 @@ public class AddBookServlet extends HttpServlet {
             return;
         }
 
-        // Create the Book object
         Book book = new Book(null, title, author, category, price, stock);
-
-        // Add the book to the database
         String bookId = bookDAO.createBook(book);
 
         if (bookId != null) {
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write("Book added successfully! ID: " + bookId);
+            response.sendRedirect("/BookNest/pages/.jsp");
         } else {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("Failed to add the book.");

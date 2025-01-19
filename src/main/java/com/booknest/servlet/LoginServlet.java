@@ -31,17 +31,15 @@ public class LoginServlet extends HttpServlet {
             // Valid user
             HttpSession session = request.getSession();
             session.setAttribute("loggedUser", user);
+            session.setAttribute("role", user.getRole()); // Store role in session as well
 
+            // Redirect based on user role
             if ("admin".equalsIgnoreCase(user.getRole())) {
-                // Redirect to admin dashboard
-                response.sendRedirect("adminDashboard"); // Replace with your admin page endpoint
+                // Redirect to home page (admin logged in)
+                response.sendRedirect("/BookNest");  // Ensure admin is redirected to the home page
             } else if ("user".equalsIgnoreCase(user.getRole())) {
-                // Redirect to user homepage
-                response.sendRedirect("userHomepage"); // Replace with your user page endpoint
-            } else {
-                // Role is undefined
-                request.setAttribute("errorMessage", "Invalid role for this user.");
-                request.getRequestDispatcher("pages/login.jsp").forward(request, response);
+                // Redirect to home page (user logged in)
+                response.sendRedirect("/BookNest");  // Ensure user is redirected to the home page
             }
         } else {
             // Invalid credentials

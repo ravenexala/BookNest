@@ -18,8 +18,8 @@ public class OrderDAO {
 
     private static final Logger LOGGER = Logger.getLogger(OrderDAO.class.getName());
 
-    // Create a new order
-    public String createOrder(String userId, List<CartItem> cartItems) {
+    // Create a new order with shipping address and payment info
+    public String createOrder(String userId, List<CartItem> cartItems, String address, String paymentInfo) {
         try {
             MongoDatabase db = DBConnection.getDatabase();
             MongoCollection<Document> ordersCollection = db.getCollection("orders");
@@ -32,9 +32,12 @@ public class OrderDAO {
                         .append("price", cartItem.getBook().getPrice()));
             }
 
+            // Create order document with address and payment info
             Document orderDoc = new Document("userId", userId)
                     .append("orderDate", new Date())
-                    .append("orderItems", orderItemsDocs);
+                    .append("orderItems", orderItemsDocs)
+                    .append("address", address)        // Store address
+                    .append("paymentInfo", paymentInfo); // Store payment info
 
             ordersCollection.insertOne(orderDoc);
             ObjectId insertedId = orderDoc.getObjectId("_id");
@@ -59,6 +62,8 @@ public class OrderDAO {
                 order.setId(doc.getObjectId("_id").toHexString());
                 order.setUserId(doc.getString("userId"));
                 order.setOrderDate(doc.getDate("orderDate"));
+                order.setAddress(doc.getString("address")); // Get address
+                order.setPaymentInfo(doc.getString("paymentInfo")); // Get payment info
 
                 // Extract and set orderItems using a helper method
                 order.setOrderItems(extractOrderItems(doc.get("orderItems")));
@@ -76,9 +81,10 @@ public class OrderDAO {
     private List<OrderItem> extractOrderItems(Object rawItems) {
         List<OrderItem> orderItems = new ArrayList<>();
 
-        if (rawItems instanceof List<?> itemsList) { // Modern pattern matching with `instanceof`
-            for (Object itemObj : itemsList) {
-                if (itemObj instanceof Document itemDoc) { // Nested pattern matching
+        if (rawItems instanceof List<?>) { // Modern pattern matching with `instanceof`
+            for (Object itemObj : (List<?>) rawItems) {
+                if (itemObj instanceof Document) { // Nested pattern matching
+                    Document itemDoc = (Document) itemObj;
                     OrderItem oi = new OrderItem();
                     oi.setBookId(itemDoc.getString("bookId"));
                     oi.setQuantity(itemDoc.getInteger("quantity"));

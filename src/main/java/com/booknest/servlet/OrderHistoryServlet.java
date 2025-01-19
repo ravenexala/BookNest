@@ -22,12 +22,18 @@ public class OrderHistoryServlet extends HttpServlet {
         User loggedUser = (User) session.getAttribute("loggedUser");
 
         if (loggedUser == null) {
+            // If the user is not logged in, redirect to login page
             response.sendRedirect("login");
             return;
         }
 
+        // Retrieve the orders for the logged-in user
         List<Order> orders = orderDAO.getOrdersByUser(loggedUser.getId());
+
+        // Set the orders as a request attribute
         request.setAttribute("orders", orders);
-        request.getRequestDispatcher("pages/orderHistory.jsp").forward(request, response);
+
+        // Forward the request to the order history JSP page
+        request.getRequestDispatcher("/pages/orderHistory.jsp").forward(request, response);
     }
 }

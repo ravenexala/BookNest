@@ -104,8 +104,13 @@ public class BookDAO {
             MongoDatabase db = DBConnection.getDatabase();
             MongoCollection<Document> booksCollection = db.getCollection("books");
 
-            booksCollection.deleteOne(eq("_id", new ObjectId(bookId)));
-            return true;
+            // Check if book exists before deleting
+            Document existingBook = booksCollection.find(eq("_id", new ObjectId(bookId))).first();
+            if (existingBook != null) {
+                booksCollection.deleteOne(eq("_id", new ObjectId(bookId)));
+                return true;
+            }
+            return false;
 
         } catch (Exception e) {
             e.printStackTrace();
