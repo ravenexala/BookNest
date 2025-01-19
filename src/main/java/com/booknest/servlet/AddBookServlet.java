@@ -9,10 +9,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.UUID;
+import javax.servlet.http.Part;
 
 @WebServlet("/books/add")
 public class AddBookServlet extends HttpServlet {
@@ -46,8 +44,9 @@ public class AddBookServlet extends HttpServlet {
         int stock;
 
         try {
-            price = Double.parseDouble(request.getParameter("price"));
-            stock = Integer.parseInt(request.getParameter("stock"));
+            // Parse price and stock values
+            price = Double.parseDouble(request.getParameter("price").trim());
+            stock = Integer.parseInt(request.getParameter("stock").trim());
         } catch (NumberFormatException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("Invalid price or stock format.");

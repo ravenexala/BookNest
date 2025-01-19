@@ -20,7 +20,7 @@
 
         <!-- Role check: If the user is not an admin, they will be redirected -->
         <c:if test="${not empty sessionScope.loggedUser && sessionScope.loggedUser.role eq 'admin'}">
-            <form action="addBook" method="POST" enctype="multipart/form-data">
+            <form action="/BookNest/books/add" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="title">Book Title</label>
                     <input type="text" name="title" id="title" class="form-control" required />
@@ -31,11 +31,11 @@
                 </div>
                 <div class="form-group">
                     <label for="price">Price</label>
-                    <input type="number" name="price" id="price" class="form-control" required />
+                    <input type="number" name="price" id="price" class="form-control" required step="any" /> <!-- allow decimal values -->
                 </div>
                 <div class="form-group">
                     <label for="stock">Stock</label>
-                    <input type="number" name="stock" id="stock" class="form-control" required />
+                    <input type="number" name="stock" id="stock" class="form-control" required /> <!-- only integer values -->
                 </div>
                 <div class="form-group">
                     <label for="category">Category</label>
