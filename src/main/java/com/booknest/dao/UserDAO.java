@@ -4,8 +4,9 @@ import com.booknest.model.User;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-import org.bson.types.ObjectId;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,8 +36,7 @@ public class UserDAO {
             usersCollection.insertOne(doc);
 
             // Retrieve generated _id
-            ObjectId id = doc.getObjectId("_id");
-            user.setId(id.toHexString());
+            user.setId(doc.getObjectId("_id").toHexString());
 
             return true;
 
@@ -73,5 +73,27 @@ public class UserDAO {
             LOGGER.log(Level.SEVERE, "Error during authentication for username=" + username, e);
         }
         return null;
+    }
+
+    // Retrieve all users
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        try {
+            MongoDatabase db = DBConnection.getDatabase();
+            MongoCollection<Document> usersCollection = db.getCollection("users");
+
+            for (Document doc : usersCollection.find()) {
+                User user = new User();
+                user.setId(doc.getObjectId("_id").toHexString());
+                user.setUsername(doc.getString("username"));
+                user.setEmail(doc.getString("email"));
+                user.setRole(doc.getString("role")); // Fetch the user's role
+                users.add(user);
+            }
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error fetching users", e);
+        }
+        return users;
     }
 }

@@ -43,46 +43,62 @@ public class AddBookServlet extends HttpServlet {
         double price;
         int stock;
 
+        // Validate price and stock
         try {
-            // Parse price and stock values
-            price = Double.parseDouble(request.getParameter("price").trim());
-            stock = Integer.parseInt(request.getParameter("stock").trim());
+            String priceStr = request.getParameter("price").trim();
+            String stockStr = request.getParameter("stock").trim();
+
+            if (priceStr.isEmpty() || stockStr.isEmpty()) {
+                throw new NumberFormatException("Price or stock cannot be empty.");
+            }
+
+            price = Double.parseDouble(priceStr);
+            stock = Integer.parseInt(stockStr);
         } catch (NumberFormatException e) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Invalid price or stock format.");
+            request.setAttribute("error", "Invalid price or stock format.");
+            request.getRequestDispatcher("/pages/addBook.jsp").forward(request, response);
             return;
         }
 
         // Handle image file upload
         Part filePart = request.getPart("image");
         String imageFileName = null;
-        if (filePart != null) {
-            // Generate unique file name to avoid name collisions
-            String fileExtension = filePart.getSubmittedFileName().substring(filePart.getSubmittedFileName().lastIndexOf("."));
-            imageFileName = UUID.randomUUID().toString() + fileExtension;
 
-            // Define where to store the image
-            String uploadDir = getServletContext().getRealPath("/") + "assests/images" + File.separator; // Path to save images
-            File uploadDirFile = new File(uploadDir);
-            if (!uploadDirFile.exists()) {
-                uploadDirFile.mkdir();  // Create directory if it doesn't exist
+        if (filePart != null && filePart.getSize() > 0) {
+            String fileExtension = filePart.getSubmittedFileName().substring(
+                    filePart.getSubmittedFileName().lastIndexOf(".")
+            );
+            if (!fileExtension.matches("\\.(jpg|jpeg|png)$")) {
+                request.setAttribute("error", "Invalid image format. Only JPG and PNG are allowed.");
+                request.getRequestDispatcher("/pages/addBook.jsp").forward(request, response);
+                return;
             }
 
-            // Save the file to the server
+            // Generate unique file name
+            imageFileName = UUID.randomUUID().toString() + fileExtension;
+
+            // Define the path to save the image
+            String uploadDir = getServletContext().getRealPath("/") + "assets/images" + File.separator;
+            File uploadDirFile = new File(uploadDir);
+            if (!uploadDirFile.exists() && !uploadDirFile.mkdirs()) {
+                request.setAttribute("error", "Failed to create directory for image upload.");
+                request.getRequestDispatcher("/pages/addBook.jsp").forward(request, response);
+                return;
+            }
+
             filePart.write(uploadDir + imageFileName);
         }
 
         // Create book object and add to database
-        Book book = new Book(null, title, author, category, price, stock, imageFileName); // Add the image file name to the book object
+        Book book = new Book(null, title, author, category, price, stock, imageFileName);
         String bookId = bookDAO.createBook(book);
 
         if (bookId != null) {
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("Book added successfully! ID: " + bookId);
-            response.sendRedirect("/BookNest/pages/books.jsp");
+            response.sendRedirect("/BookNest/pages/books.jsp?success=true");
         } else {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Failed to add the book.");
+            request.setAttribute("error", "Failed to add the book. Please try again.");
+            request.getRequestDispatcher("/pages/addBook.jsp").forward(request, response);
         }
     }
 }

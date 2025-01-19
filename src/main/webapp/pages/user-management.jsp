@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>User Management - Admin</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> <!-- Include updated styles -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="/BookNest/assests/styles.css" rel="stylesheet">
 </head>
 <body>
@@ -18,15 +18,16 @@
         <c:if test="${not empty sessionScope.loggedUser && sessionScope.loggedUser.role eq 'admin'}">
             <c:forEach var="user" items="${users}">
                 <div>
-                    <p>Username: ${user.username}</p>
-                    <p>Email: ${user.email}</p>
+                    <p><strong>Username:</strong> ${user.username}</p>
+                    <p><strong>Email:</strong> ${user.email}</p>
+                    <p><strong>Role:</strong> ${user.role}</p>
                     <form action="edit-user" method="get">
                         <input type="hidden" name="userId" value="${user.id}" />
-                        <button type="submit">Edit</button>
+                        <button type="submit" class="btn btn-info">Edit</button>
                     </form>
                     <form action="delete-user" method="post">
                         <input type="hidden" name="userId" value="${user.id}" />
-                        <button type="submit">Delete</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 </div>
             </c:forEach>
